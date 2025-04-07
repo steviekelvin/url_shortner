@@ -10,11 +10,9 @@ RUN npm install
 
 COPY . .
 
-# Configura o prisma 
-RUN npx prisma generate
-
 # Build para produção
 RUN npm run build
 
 EXPOSE 3000
+
 CMD ["node", "dist/main"]
