@@ -11,12 +11,18 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - url_network
+    env_file:
+      - .env
 
   app:
     build: .
     container_name: url_app
     ports:
       - "3000:3000"
+      - "5555:5555"
+    restart: always
     depends_on:
       - db
     env_file:
@@ -26,9 +32,15 @@ services:
       - /app/node_modules
       - /app/prisma/migrations
     environment:
-    - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_URL=${DATABASE_URL}
     command: sh -c "npm install && npx prisma generate && npx prisma migrate deploy && npm run build && npm run start:prod"
+    networks:
+      - url_network
 
 volumes:
   pgdata:
-    driver: local
+  pgadmin_data:
+
+networks:
+  url_network:
+    driver: bridge

@@ -1,44 +1,45 @@
 # 🔗 URL Shortener API
 
-A RESTful API built with **NestJS**, **Prisma**, and **PostgreSQL** that allows users to shorten URLs, track clicks, and manage their links. Supports both **authenticated** and **anonymous** usage.
+Uma API RESTful construída com **NestJS**, **Prisma** e **PostgreSQL**, que permite encurtar URLs, rastrear cliques e gerenciar links. Suporta uso **autenticado** e **anônimo**.
 
 ---
 
-## 🚀 Features
+## 🚀 Funcionalidades
 
-- ✅ Register and login with JWT authentication
-- ✅ Shorten URLs (authenticated or anonymous)
-- ✅ Redirect via short code
-- ✅ Track clicks on each URL
-- ✅ Manage URLs (list, update, delete) for logged-in users
-- ✅ Fully documented with Swagger
-- ✅ Containerized with Docker
-- ✅ Includes working `.env.example` and Prisma migration
-
----
-
-## 🧰 Tech Stack
-
-- **NestJS** - backend framework
-- **Prisma** - ORM for PostgreSQL
-- **PostgreSQL** - relational database
-- **JWT** - authentication and authorization
-- **Swagger** - API documentation
-- **Docker & Docker Compose** - container orchestration
+- ✅ Cadastro e login com autenticação via JWT
+- ✅ Encurtamento de URLs (com ou sem autenticação)
+- ✅ Redirecionamento via código curto
+- ✅ Rastreamento de cliques por URL
+- ✅ Gerenciamento de URLs (listar, editar, remover) para usuários autenticados
+- ✅ Documentação completa via Swagger
+- ✅ Totalmente containerizado com Docker
+- ✅ Arquivo `.env.example` incluso
+- ✅ Migrações automáticas com Prisma
 
 ---
 
-## ⚙️ Environment Setup
+## 🧰 Stack Tecnológica
 
-### 🔐 Environment Variables
+- **NestJS** – Framework backend
+- **Prisma** – ORM para PostgreSQL
+- **PostgreSQL** – Banco de dados relacional
+- **JWT** – Autenticação e autorização
+- **Swagger** – Documentação da API
+- **Docker & Docker Compose** – Orquestração de containers
 
-This project already includes a working `.env.example`. To start, just copy it:
+---
+
+## ⚙️ Configuração do Ambiente
+
+### 🔐 Variáveis de Ambiente
+
+Copie o arquivo de exemplo:
 
 ```bash
 cp .env.example .env
 ```
 
-You can adjust values if necessary:
+Exemplo de conteúdo:
 
 ```env
 DATABASE_URL=postgresql://postgres:postgres@db:5432/urlshortener
@@ -49,61 +50,91 @@ BASE_URL=http://localhost:3000
 
 ---
 
-## 🐳 Running with Docker
+## 🐳 Executando com Docker
 
-### 📦 Build and Run
+### 📦 Build e Inicialização
 
 ```bash
 docker-compose up --build
 ```
 
-This will:
+Isso irá:
 
-- Start a PostgreSQL database on port `5432`
-- Start the NestJS API server on port `3000`
-- Apply Prisma migrations automatically (`migrate deploy`)
-- Automatically install dependencies
+- Subir o PostgreSQL na porta `5432`
+- Subir a API NestJS na porta `3000`
+- Aplicar automaticamente as migrações Prisma (`migrate deploy`)
+- Instalar dependências automaticamente
 
-> 🧠 **Note:** On first run, the database will be empty. Prisma will apply the initial migration (`init`) but no data will be populated. Use `npx prisma studio` to view/manage DB content.
+> ℹ️ **Nota:** No primeiro uso, o banco estará vazio. As migrações iniciais serão aplicadas, mas nenhum dado será populado.
 
 ---
 
-## 📘 API Documentation
+## 🛠 Prisma Studio
 
-After starting the app, open:
+O **Prisma Studio** é uma interface web para visualizar e editar os dados do banco.
+
+### ▶️ Rodando via Docker
+
+Execute:
+
+```bash
+docker compose exec app npx prisma studio
+```
+
+O Prisma Studio será iniciado automaticamente e estará disponível na URL:
+
+```
+http://localhost:5555
+```
+
+> ✅ **Observação:** Dentro do Docker, o Prisma Studio sempre rodará na porta `5555`.
+
+### 🧪 Rodando fora do Docker
+
+Se quiser rodar localmente (fora do container), use:
+
+```bash
+npx prisma studio
+```
+
+Certifique-se de que o `DATABASE_URL` aponte para `localhost` e que o PostgreSQL esteja acessível.
+
+---
+
+## 📘 Documentação da API (Swagger)
+
+Após iniciar a aplicação, acesse:
 
 ```
 http://localhost:3000/api
 ```
 
-There you will find the full **Swagger UI** documentation of the API.
-
 ---
 
-## 📂 Endpoints Overview
+## 📂 Visão Geral das Rotas
 
-### 🔐 Auth
+### 🔐 Autenticação
 
-- `POST /auth/register` – Register a new user
-- `POST /auth/login` – Authenticate and receive a JWT
+- `POST /auth/register` – Registrar novo usuário
+- `POST /auth/login` – Autenticar e receber token JWT
 
-### 👤 Users
+### 👤 Usuário
 
-- `GET /users/me` – Get authenticated user's profile (requires JWT)
+- `GET /users/me` – Obter perfil do usuário autenticado
 
 ### 🔗 URLs
 
-- `POST /shorten` – Shorten a new URL (auth optional)
-- `GET /:shortCode` – Redirect to original URL
-- `GET /urls/mine` – List authenticated user's shortened URLs
-- `PATCH /urls/:id` – Update a shortened URL (auth required)
-- `DELETE /urls/:id` – Delete a shortened URL (auth required)
+- `POST /shorten` – Encurtar nova URL (opcionalmente autenticado)
+- `GET /:shortCode` – Redirecionar para a URL original
+- `GET /urls/mine` – Listar URLs encurtadas pelo usuário logado
+- `PATCH /urls/:id` – Editar URL (requer autenticação)
+- `DELETE /urls/:id` – Deletar URL (requer autenticação)
 
 ---
 
-## 🧪 Example Requests
+## 🧪 Exemplos de Requisição
 
-### 🔗 Shorten a URL
+### 🔗 Encurtar URL
 
 ```bash
 curl -X POST http://localhost:3000/shorten \
@@ -111,7 +142,7 @@ curl -X POST http://localhost:3000/shorten \
   -d '{"originalUrl": "https://example.com"}'
 ```
 
-### 🔐 Register
+### 🔐 Registrar Usuário
 
 ```bash
 curl -X POST http://localhost:3000/auth/register \
@@ -121,45 +152,41 @@ curl -X POST http://localhost:3000/auth/register \
 
 ---
 
-## 🛠 Development without Docker
+## 👨‍💻 Desenvolvimento Local (sem Docker)
 
 ```bash
-# Install dependencies
+# Instalar dependências
 npm install
 
-# Create and configure your database if needed
-# Apply migrations
+# Aplicar migrações
 npx prisma migrate dev
 
-# Run the app
+# Iniciar aplicação em modo dev
 npm run start:dev
 ```
 
 ---
 
-## 🧼 Prisma & Database Commands
+## 🧼 Comandos Úteis do Prisma
 
-- Generate Prisma Client: `npx prisma generate`
-- Create migration: `npx prisma migrate dev --name init`
-- Deploy migrations (prod): `npx prisma migrate deploy`
-- Open DB GUI: `npx prisma studio`
+- Gerar cliente: `npx prisma generate`
+- Criar nova migração: `npx prisma migrate dev --name init`
+- Aplicar migrações no ambiente de produção: `npx prisma migrate deploy`
+- Abrir Prisma Studio: `npx prisma studio`
 
 ---
 
-## 📦 Project Structure
+## 📁 Estrutura do Projeto
 
 ```
 src/
 │
-├── auth/              # Auth module (login, register, guards)
-├── users/             # User profile
-├── urls/              # URL shortening logic
-├── prisma/            # Prisma service and schema
-└── main.ts            # Entry point
+├── auth/              # Autenticação (login, registro, guards)
+├── users/             # Perfil do usuário
+├── urls/              # Lógica de encurtamento de URL
+├── prisma/            # Prisma schema e service
+└── main.ts            # Ponto de entrada
 ```
 
----
 
-## 📝 License
-
-MIT License. Feel free to use and adapt.
+## Created by Stevie Kelvin
